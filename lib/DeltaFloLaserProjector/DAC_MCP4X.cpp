@@ -232,10 +232,14 @@ void MCP4X::latch(void)
     // PORTD &= ~(1 << 7); // Uno: digital pin 7; Mega: digital pin 38
     PORT->Group[g_APinDescription[7].ulPort].OUTCLR.reg = (1ul << g_APinDescription[7].ulPin);
     asm volatile("nop");
-    // Extra nops for 3x clock speed? Not measured on anything, just a guesstimate
-    asm volatile("nop");
-    asm volatile("nop");
-    // delayMicroseconds(30);
+
+    // TODO: Scope this on ItsyBitsy and figure out the actual correct(?) value
+    // asm volatile("nop");
+    // asm volatile("nop");
+    // delayMicroseconds(20);
+    delayMicroseconds(50);
+    // delayMicroseconds(66);
+    // delayMicroseconds(100);
     // PORTD |= (1 << 7);
     PORT->Group[g_APinDescription[7].ulPort].OUTSET.reg = (1ul << g_APinDescription[7].ulPin);
     // 42;

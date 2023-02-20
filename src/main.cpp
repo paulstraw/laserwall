@@ -6,11 +6,14 @@
 #include "weirdcurve.h"
 #include "wc2.h"
 #include "Objects.h"
+#include "Logo.h"
 #include "smileylaserweb.h"
 #include "skull.h"
 #include "ghost.h"
 #include "safetythird.h"
 #include "dnc.h"
+#include "sidedoor.h"
+#include "amongus.h"
 
 // Create laser instance (with laser pointer connected to digital pin 5)
 Laser laser(5);
@@ -45,6 +48,76 @@ void circle()
   laser.off();
 }
 
+void drawLogo()
+{
+  long centerX, centerY, w, h;
+  Drawing::calcObjectBox(draw_logo, sizeof(draw_logo) / 4, centerX, centerY, w, h);
+
+  int count = 200;
+  laser.setScale(4096 / (float)h);
+  laser.setOffset(2048, 2048);
+
+  long maxMove = 0;
+  for (int i = 0; i < count; i++)
+  {
+    laser.setMaxMove(maxMove);
+    maxMove += 400;
+    Drawing::drawObject(draw_logo, sizeof(draw_logo) / 4, -centerX, -centerY);
+    if (laser.maxMoveReached())
+    {
+      long x, y;
+      laser.getMaxMoveFinalPosition(x, y);
+      laser.resetMaxMove();
+      laser.off();
+      laser.sendtoRaw(x, y);
+      laser.on();
+      laser.sendtoRaw(2047, 0);
+    }
+  }
+  laser.resetMaxMove();
+  long pos = 0;
+  while (pos < 4095)
+  {
+    laser.setClipArea(pos, 0, 4095, 4095);
+    pos += 100;
+    Drawing::drawObject(draw_logo, sizeof(draw_logo) / 4, -centerX, -centerY);
+  }
+  laser.resetClipArea();
+}
+
+void drawAmongButt()
+{
+  for (int i = 0; i < 2; i++)
+  {
+    Drawing::drawObject(draw_amongus1, sizeof(draw_amongus1) / 4, 0, 0);
+  }
+
+  for (int i = 0; i < 2; i++)
+  {
+    Drawing::drawObject(draw_amongus2, sizeof(draw_amongus2) / 4, 0, 0);
+  }
+
+  for (int i = 0; i < 2; i++)
+  {
+    Drawing::drawObject(draw_amongus3, sizeof(draw_amongus3) / 4, 0, 0);
+  }
+
+  for (int i = 0; i < 2; i++)
+  {
+    Drawing::drawObject(draw_amongus4, sizeof(draw_amongus4) / 4, 0, 0);
+  }
+
+  for (int i = 0; i < 2; i++)
+  {
+    Drawing::drawObject(draw_amongus5, sizeof(draw_amongus5) / 4, 0, 0);
+  }
+
+  for (int i = 0; i < 2; i++)
+  {
+    Drawing::drawObject(draw_amongus6, sizeof(draw_amongus6) / 4, 0, 0);
+  }
+}
+
 char messageBuffer[5]; // 2 bytes x, 2 bytes y, 1 byte meta
 
 void loop()
@@ -60,6 +133,7 @@ void loop()
   //   // Serial.println(targetY);
   // }
 
+  // drawLogo();
   // circle();
   // laser.setOffset(2048, 2048);
   // laser.setScale(4);
@@ -72,10 +146,12 @@ void loop()
   // laser.setScale(0.4f);
   // laser.setOffset(0, 0);
   // Drawing::drawObject(draw_smileylaserweb, sizeof(draw_smileylaserweb) / 4, 0, 0);
-  Drawing::drawObject(draw_skull, sizeof(draw_skull) / 4, 0, 0);
+  // Drawing::drawObject(draw_skull, sizeof(draw_skull) / 4, 0, 0);
   // Drawing::drawObject(draw_ghost, sizeof(draw_ghost) / 4, 0, 0);
   // Drawing::drawObject(draw_safetythird, sizeof(draw_safetythird) / 4, 0, 0);
   // Drawing::drawObject(draw_dnc, sizeof(draw_dnc) / 4, 0, 0);
+  Drawing::drawObject(draw_sidedoor, sizeof(draw_sidedoor) / 4, 0, 0);
+  // drawAmongButt();
 
   // long centerX, centerY, w, h;
   // Drawing::calcObjectBox(draw_wc2, sizeof(draw_wc2) / 4, centerX, centerY, w, h);
