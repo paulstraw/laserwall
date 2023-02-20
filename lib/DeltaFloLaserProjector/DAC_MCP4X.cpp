@@ -4,6 +4,9 @@
  * See header file.
  */
 
+// Changes for atmelsam (Cortex M0) from
+// https://forum.arduino.cc/t/faster-pin-i-o-on-zero/322111/36?page=2
+
 #include <SPI.h>
 #include "DAC_MCP4X.h"
 
@@ -183,7 +186,9 @@ void MCP4X::write(unsigned int data)
 {
   // Drive chip select low
   if (MCP4X_PORT_WRITE)
-    PORTB &= 0xfb; // Clear PORTB pin 2 = arduino pin 10
+    // PORTB &= 0xfb; // Clear PORTB pin 2 = arduino pin 10
+    PORT->Group[g_APinDescription[10].ulPort].OUTCLR.reg = (1ul << g_APinDescription[10].ulPin);
+  // 42;
   else
     digitalWrite(ss_pin, LOW);
 
@@ -193,7 +198,9 @@ void MCP4X::write(unsigned int data)
 
   // Return chip select to high
   if (MCP4X_PORT_WRITE)
-    PORTB |= (1 << 2); // set PORTB pin 2 = arduino pin 10
+    // PORTB |= (1 << 2); // set PORTB pin 2 = arduino pin 10
+    PORT->Group[g_APinDescription[10].ulPort].OUTSET.reg = (1ul << g_APinDescription[10].ulPin);
+  // 42;
   else
     digitalWrite(ss_pin, HIGH);
 }
@@ -222,9 +229,16 @@ void MCP4X::latch(void)
   {
     // This gives ~180 ns (three clock cycles, most of which is spent low) of
     // low time on a Uno R3 (16 MHz), measured on a scope to make sure
-    PORTD &= ~(1 << 7); // Uno: digital pin 7; Mega: digital pin 38
+    // PORTD &= ~(1 << 7); // Uno: digital pin 7; Mega: digital pin 38
+    PORT->Group[g_APinDescription[7].ulPort].OUTCLR.reg = (1ul << g_APinDescription[7].ulPin);
     asm volatile("nop");
-    PORTD |= (1 << 7);
+    // Extra nops for 3x clock speed? Not measured on anything, just a guesstimate
+    asm volatile("nop");
+    asm volatile("nop");
+    // delayMicroseconds(30);
+    // PORTD |= (1 << 7);
+    PORT->Group[g_APinDescription[7].ulPort].OUTSET.reg = (1ul << g_APinDescription[7].ulPin);
+    // 42;
   }
   else
   {

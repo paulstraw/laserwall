@@ -26,9 +26,9 @@
 // define this to swap X and Y on the DAC
 #define LASER_SWAP_XY
 // define this to flip along the x axis
-// #define LASER_FLIP_X
+#define LASER_FLIP_X
 // define this to flip along the y axis
-#define LASER_FLIP_Y
+// #define LASER_FLIP_Y
 
 //! Encapsulates the laser movement and on/off state.
 class Laser
