@@ -14,6 +14,7 @@
 #include "dnc.h"
 #include "sidedoor.h"
 #include "amongus.h"
+#include "foxfriend.h"
 
 // Create laser instance (with laser pointer connected to digital pin 5)
 Laser laser(5);
@@ -30,9 +31,9 @@ void setup()
   // Serial.begin(250000, SERIAL_8N2);
   // Serial.begin(500000, SERIAL_8N2);
   Serial.begin(1000000, SERIAL_8N2);
+  Serial.setTimeout(5);
 }
 
-// draw a circle using sin/cos
 void circle()
 {
   laser.setScale(1);
@@ -42,7 +43,6 @@ void circle()
   laser.on();
   for (int r = 5; r <= 360; r += 5)
   {
-    Serial.println(SIN(r) / scale);
     laser.sendto(SIN(r) / scale, COS(r) / scale);
   }
   laser.off();
@@ -87,6 +87,9 @@ void drawLogo()
 
 void drawAmongButt()
 {
+  laser.setScale(1);
+  laser.setOffset(0, 0);
+
   for (int i = 0; i < 2; i++)
   {
     Drawing::drawObject(draw_amongus1, sizeof(draw_amongus1) / 4, 0, 0);
@@ -119,46 +122,93 @@ void drawAmongButt()
 }
 
 char messageBuffer[5]; // 2 bytes x, 2 bytes y, 1 byte meta
+char prog = '0';
 
 void loop()
 {
-  // if (Serial.available() > 0)
-  // {
-  //   Serial.readBytes(messageBuffer, 5);
-  //   unsigned int targetX = (messageBuffer[0] << 8) | messageBuffer[1];
-  //   unsigned int targetY = (messageBuffer[2] << 8) | messageBuffer[3];
-  //   laser.sendto(targetX, targetY);
-  //   // Serial.println("targetX");
-  //   // Serial.println(targetX);
-  //   // Serial.println(targetY);
-  // }
+  if (Serial.available() > 0)
+  {
+    Serial.readBytes(messageBuffer, 1);
+    Serial.readString();
+    prog = messageBuffer[0];
+    Serial.println(prog);
 
-  // drawLogo();
-  // circle();
-  // laser.setOffset(2048, 2048);
-  // laser.setScale(4);
-  // Drawing::drawObject(draw_heart, sizeof(draw_hefart) / 4, 0, 0);
-  // laser.setScale(3.5f);
-  // laser.setScale(1);
-  // Drawing::drawObject(draw_island, sizeof(draw_island) / 4, 0, 0);
-  // laser.setScale(5);
-  // Drawing::drawObject(draw_bike, sizeof(draw_bike) / 4, 0, 0);
-  // laser.setScale(0.4f);
-  // laser.setOffset(0, 0);
-  // Drawing::drawObject(draw_smileylaserweb, sizeof(draw_smileylaserweb) / 4, 0, 0);
-  // Drawing::drawObject(draw_skull, sizeof(draw_skull) / 4, 0, 0);
-  // Drawing::drawObject(draw_ghost, sizeof(draw_ghost) / 4, 0, 0);
-  // Drawing::drawObject(draw_safetythird, sizeof(draw_safetythird) / 4, 0, 0);
-  // Drawing::drawObject(draw_dnc, sizeof(draw_dnc) / 4, 0, 0);
-  Drawing::drawObject(draw_sidedoor, sizeof(draw_sidedoor) / 4, 0, 0);
-  // drawAmongButt();
+    // Serial.readBytes(messageBuffer, 5);
+    // unsigned int targetX = (messageBuffer[0] << 8) | messageBuffer[1];
+    // unsigned int targetY = (messageBuffer[2] << 8) | messageBuffer[3];
+    // laser.sendto(targetX, targetY);
+    // Serial.println("targetX");
+    // Serial.println(targetX);
+    // Serial.println(targetY);
+  }
 
-  // long centerX, centerY, w, h;
-  // Drawing::calcObjectBox(draw_wc2, sizeof(draw_wc2) / 4, centerX, centerY, w, h);
-  // laser.setScale(4096 / (float)h);
-  // laser.setOffset(2048, 2048);
-  // for (int i = 0; i < 1000; i++)
-  // {
-  //   Drawing::drawObject(draw_wc2, sizeof(draw_wc2) / 4, -centerX, -centerY);
-  // }
+  switch (prog)
+  {
+  case '0':
+    break;
+  case '1':
+    circle();
+    break;
+  case '2':
+    laser.setScale(4);
+    laser.setOffset(0, 0);
+    Drawing::drawObject(draw_heart, sizeof(draw_heart) / 4, 0, 0);
+    break;
+  case '3':
+    laser.setScale(3.5f);
+    laser.setOffset(0, 0);
+    Drawing::drawObject(draw_island, sizeof(draw_island) / 4, 0, 0);
+    break;
+  case '4':
+    drawLogo();
+    break;
+  case '5':
+    laser.setScale(5);
+    laser.setOffset(0, 0);
+    Drawing::drawObject(draw_bike, sizeof(draw_bike) / 4, 0, 0);
+    break;
+  case '6':
+    laser.setScale(1);
+    laser.setOffset(0, 0);
+    Drawing::drawObject(draw_smileylaserweb, sizeof(draw_smileylaserweb) / 4, 0, 0);
+    break;
+  case '7':
+    laser.setScale(1);
+    laser.setOffset(0, 0);
+    Drawing::drawObject(draw_skull, sizeof(draw_skull) / 4, 0, 0);
+    break;
+  case '8':
+    laser.setScale(1);
+    laser.setOffset(0, 0);
+    Drawing::drawObject(draw_ghost, sizeof(draw_ghost) / 4, 0, 0);
+    break;
+  case '9':
+    laser.setScale(1);
+    laser.setOffset(0, 0);
+    Drawing::drawObject(draw_safetythird, sizeof(draw_safetythird) / 4, 0, 0);
+    break;
+  case 'a':
+    laser.setScale(1);
+    laser.setOffset(0, 0);
+    drawAmongButt();
+    break;
+  case 'b':
+    laser.setScale(1);
+    laser.setOffset(0, 0);
+    Drawing::drawObject(draw_sidedoor, sizeof(draw_sidedoor) / 4, 0, 0);
+    break;
+  case 'c':
+    laser.setScale(1);
+    laser.setOffset(0, 0);
+    Drawing::drawObject(draw_dnc, sizeof(draw_dnc) / 4, 0, 0);
+    break;
+  case 'd':
+    Drawing::drawObject(draw_foxfriend, sizeof(draw_foxfriend) / 4, 0, 0);
+    break;
+  case 'e':
+    laser.setScale(1);
+    laser.setOffset(0, 0);
+    Drawing::drawString("12:42", 0, 0);
+    break;
+  }
 }

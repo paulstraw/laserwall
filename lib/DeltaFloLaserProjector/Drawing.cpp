@@ -167,6 +167,9 @@ long Drawing::drawLetter(byte letter, long translateX, long translateY)
   case '.':
     drawObject(draw_dot, sizeof(draw_dot) / 4, translateX, translateY);
     break;
+  case ':':
+    drawObject(draw_colon, sizeof(draw_colon) / 4, translateX, translateY);
+    break;
   case ' ':
     break;
   }

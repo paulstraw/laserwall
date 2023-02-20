@@ -231,7 +231,7 @@ void MCP4X::latch(void)
     // low time on a Uno R3 (16 MHz), measured on a scope to make sure
     // PORTD &= ~(1 << 7); // Uno: digital pin 7; Mega: digital pin 38
     PORT->Group[g_APinDescription[7].ulPort].OUTCLR.reg = (1ul << g_APinDescription[7].ulPin);
-    asm volatile("nop");
+    // asm volatile("nop");
 
     // TODO: Scope this on ItsyBitsy and figure out the actual correct(?) value
     // asm volatile("nop");
