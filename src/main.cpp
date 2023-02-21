@@ -15,6 +15,8 @@
 #include "sidedoor.h"
 #include "amongus.h"
 #include "foxfriend.h"
+#include "dogfriend.h"
+#include "subscribe.h"
 
 // Create laser instance (with laser pointer connected to digital pin 5)
 Laser laser(5);
@@ -46,6 +48,14 @@ void circle()
     laser.sendto(SIN(r) / scale, COS(r) / scale);
   }
   laser.off();
+}
+
+void drawHelloWorld()
+{
+  laser.setScale(0.7f);
+  laser.setOffset(0, 0);
+  Drawing::drawString("LASER", 700, 3500);
+  Drawing::drawString("WALL", 1100, 2000);
 }
 
 void drawLogo()
@@ -203,12 +213,28 @@ void loop()
     Drawing::drawObject(draw_dnc, sizeof(draw_dnc) / 4, 0, 0);
     break;
   case 'd':
+    laser.setScale(1);
+    laser.setOffset(0, 0);
     Drawing::drawObject(draw_foxfriend, sizeof(draw_foxfriend) / 4, 0, 0);
     break;
   case 'e':
     laser.setScale(1);
     laser.setOffset(0, 0);
     Drawing::drawString("12:42", 0, 0);
+    break;
+  case 'f':
+    laser.setScale(1);
+    laser.setOffset(0, 0);
+    Drawing::drawObject(draw_dogfriend, sizeof(draw_dogfriend) / 4, 0, 0);
+    break;
+  case 'g':
+    drawHelloWorld();
+    break;
+  case 'h':
+    laser.setScale(0.5);
+    laser.setOffset(0, 0);
+    Drawing::drawString("SUBSCRIBE", 0, 2800);
+    // Drawing::drawObject(draw_subscribe, sizeof(draw_subscribe) / 4, 0, 0);
     break;
   }
 }
